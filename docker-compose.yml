@@ -1,0 +1,113 @@
+version: "3.7"
+services:
+  noctua-city-api:
+    container_name: noctua-city-api
+    build:
+      context: ./noctua-city-api
+      dockerfile: docker/Dockerfile
+    image: noctua-city-api
+    ports:
+    - 3001:3000
+    env_file:
+      - .env
+    volumes:
+    - ./noctua-city-api:/opt/api
+    - /opt/project/node_modules/
+    networks:
+    - noctua_city_local
+    - noctua_city_global
+    depends_on:
+      - noctua-city-mongodb
+      - noctua-city-postgres
+      - noctua-city-redis
+
+  noctua-city-app:
+    image: node:alpine3.10
+    container_name: noctua-city-app
+    ports:
+      - 3000:3000
+    working_dir: /opt/app
+    command: sh -c "npm install --no-update-notifier; npm start --no-update-notifier"
+    volumes:
+      - ./noctua-city-app:/opt/app
+      - /opt/project/node_modules/
+    networks:
+      - noctua_city_local
+      - noctua_city_global
+    depends_on:
+      - noctua-city-api
+
+  noctua-city-mobile:
+    image: node:alpine3.10
+    container_name: noctua-city-mobile
+    ports:
+      - 8081:8081
+    working_dir: /opt/mobile
+    command: sh -c "npm install --no-update-notifier; npm start --no-update-notifier"
+    volumes:
+      - ./noctua-city-mobile:/opt/mobile
+      - /opt/mobile/node_modules/
+    networks:
+      - noctua_city_local
+      - noctua_city_global
+    depends_on:
+      - noctua-city-api
+
+  noctua-city-postgres:
+    container_name: noctua-city-postgres
+    image: postgres:13-alpine3.14
+    ports:
+    - 5432:5432
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+    - pgsql-volume:/var/lib/postgresql/data:delegated
+    networks:
+    - noctua_city_local
+    healthcheck:
+      test:
+      - CMD
+      - pg_isready
+      - -q
+      - -d
+      # - $POSTGRES_DB
+      - -U
+      # - $POSTGRES_USER
+
+  noctua-city-redis:
+    container_name: noctua-city-redis
+    image: redis:6-alpine
+    ports:
+    - 6379:6379
+    volumes:
+    - cache-volume:/data:delegated
+    networks:
+    - noctua_city_local
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+
+  noctua-city-mongodb:
+    container_name: noctua_city_mongodb
+    image: mongo:5.0.0
+    env_file:
+      - .env
+    ports:
+      - 27017:27017
+    networks:
+      - noctua_city_local
+    volumes:
+      - mongodb-volume:/data/db
+
+volumes:
+  pgsql-volume: null
+  cache-volume: null
+  mongodb-volume: null
+
+networks:
+  noctua_city_local: null
+  noctua_city_global: null
