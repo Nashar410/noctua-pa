@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "noctua-city-mobile",
+    "slug": "noctua-city-mobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "noctua-city-mobile"
+}
