@@ -12,7 +12,7 @@ services:
       - .env
     volumes:
     - ./noctua-city-api:/opt/api
-    - /opt/project/node_modules/
+    - /opt/api/node_modules
     networks:
     - noctua_city_local
     - noctua_city_global
@@ -30,7 +30,7 @@ services:
     command: sh -c "npm install --no-update-notifier; npm start --no-update-notifier"
     volumes:
       - ./noctua-city-app:/opt/app
-      - /opt/project/node_modules/
+      - /opt/app/node_modules
     networks:
       - noctua_city_local
       - noctua_city_global
@@ -41,7 +41,7 @@ services:
     image: node:alpine3.10
     container_name: noctua-city-mobile
     ports:
-      - 8081:8081
+      - 8181:8081
     working_dir: /opt/mobile
     command: sh -c "npm install --no-update-notifier; npm start --no-update-notifier"
     volumes:
@@ -72,9 +72,9 @@ services:
       - pg_isready
       - -q
       - -d
-      # - $POSTGRES_DB
+      - $POSTGRES_DB
       - -U
-      # - $POSTGRES_USER
+      - $POSTGRES_USER
 
   noctua-city-redis:
     container_name: noctua-city-redis
