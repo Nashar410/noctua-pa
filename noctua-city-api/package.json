@@ -21,7 +21,22 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@mikro-orm/core": "^4.5.9",
+    "@mikro-orm/nestjs": "^4.3.1",
+    "@mikro-orm/postgresql": "^4.5.9",
+    "@mikro-orm/reflection": "^4.5.9",
+    "@mikro-orm/cli": "^4.5.7",
+    "@mikro-orm/mongodb": "^4.5.7",
+    "@nestjs/config": "^1.0.1",
     "@nestjs/common": "^8.0.0",
+    "@nestjs/passport": "^8.0.1",
+    "cache-manager": "^3.4.4",
+    "cache-manager-redis-store": "^2.0.0",
+    "mongodb": "^4.1.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "pg": "^8.7.1",
+    "passport-local": "^1.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "reflect-metadata": "^0.1.13",
@@ -50,6 +65,13 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.5"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   },
   "jest": {
     "moduleFileExtensions": [
